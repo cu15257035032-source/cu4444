@@ -1,309 +1,52 @@
 <!DOCTYPE html>
-
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>给王诗雨的小惊喜</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>今晚安排</title>
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-overflow:hidden;
-background:#000;
-font-family:"Microsoft YaHei";
-color:white;
-height:100vh;
-}
-
-canvas{
-position:fixed;
-left:0;
-top:0;
-z-index:0;
-}
-
-.container{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:10;
-text-align:center;
-padding:20px;
-}
-
-button{
-padding:15px 35px;
-font-size:22px;
-border:none;
-border-radius:50px;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.08);
-}
-
-#startBtn{
-background:#ff4d88;
-color:white;
-}
-
-.message{
-font-size:32px;
-line-height:2;
-max-width:900px;
-}
-
-.choice{
-display:none;
-margin-top:40px;
-}
-
-.green{
-background:#4CAF50;
-color:white;
-margin-right:20px;
-}
-
-.red{
-background:#ff4b4b;
-color:white;
-}
-
-.heart{
-position:fixed;
-font-size:30px;
-pointer-events:none;
-animation:fly 5s linear forwards;
-}
-
-@keyframes fly{
-0%{
-transform:translateY(0) scale(1);
-opacity:1;
-}
-100%{
-transform:translateY(-800px) scale(2);
-opacity:0;
-}
-}
-
-#emoji{
-font-size:100px;
-margin-top:20px;
-display:none;
-}
-
-.result{
-font-size:40px;
-margin-top:20px;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1b2735);background-size:400% 400%;animation:bg 12s infinite;color:#fff}
+@keyframes bg{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+.card{width:920px;max-width:95%;padding:32px;background:rgba(255,255,255,.12);backdrop-filter:blur(18px);border-radius:24px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+h1{text-align:center;margin-bottom:28px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.item{display:block;position:relative;border-radius:18px;overflow:hidden;border:3px solid transparent;cursor:pointer}
+.item img{width:100%;height:240px;object-fit:cover;display:block;transition:.3s}
+.item:hover img{transform:scale(1.05)}
+.item input{position:absolute;top:12px;left:12px;transform:scale(1.5)}
+.item:has(input:checked){border-color:#00ff9d;box-shadow:0 0 20px #00ff9d}
+button{display:block;margin:30px auto 0;padding:14px 48px;border:none;border-radius:50px;background:#00d084;color:#fff;font-size:22px;cursor:pointer}
+#page2{display:none;text-align:center}
+.radio{margin:25px;font-size:28px}
+.author{position:fixed;right:18px;bottom:15px;color:rgba(255,255,255,.7);font-size:14px}
 </style>
-
 </head>
-
 <body>
-
-<canvas id="stars"></canvas>
-
-<div class="container">
-
-<div id="welcome">
-<h1 style="margin-bottom:30px">
-❤️ 王诗雨 ❤️
-</h1>
-
-<button id="startBtn">
-点击这里有惊喜
-</button>
+<div id="page1" class="card">
+<h1>🌙 请选择晚上的活动（可多选）</h1>
+<div class="grid">
+<label class="item"><input type="checkbox"><img src="1.jpg"></label>
+<label class="item"><input type="checkbox"><img src="2.jpg"></label>
+<label class="item"><input type="checkbox"><img src="3.jpg"></label>
+<label class="item"><input type="checkbox"><img src="4.jpg"></label>
+</div>
+<button onclick="nextPage()">确认</button>
 </div>
 
-<div id="story" style="display:none">
-
-<div class="message" id="text"></div>
-
-<div class="choice" id="choice">
-
-<h2 style="margin-bottom:30px">
-王诗雨，你愿意原谅我吗❤️
-</h2>
-
-<button class="green" onclick="forgive()">
-💚 我原谅你
-</button>
-
-<button class="red" onclick="notForgive()">
-❤️ 不原谅
-</button>
-
-<div id="emoji">😝</div>
-
-<div class="result" id="result"></div>
-
+<div id="page2" class="card">
+<h1>😂 不来是孙子</h1>
+<div class="radio"><label><input type="radio" name="r"> 我是孙子</label></div>
+<div class="radio"><label><input type="radio" name="r"> 我肯定来</label></div>
 </div>
 
-</div>
-
-</div>
+<div class="author">网页作者：钱钱</div>
 
 <script>
-
-const canvas=document.getElementById("stars");
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-const stars=[];
-
-for(let i=0;i<200;i++){
-stars.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*2
-});
+function nextPage(){
+document.getElementById('page1').style.display='none';
+document.getElementById('page2').style.display='block';
 }
-
-function drawStars(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle="white";
-
-stars.forEach(s=>{
-ctx.beginPath();
-ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-ctx.fill();
-});
-
-requestAnimationFrame(drawStars);
-}
-
-drawStars();
-
-function floatingHeart(){
-
-const heart=document.createElement("div");
-
-heart.className="heart";
-heart.innerHTML="❤️";
-
-heart.style.left=Math.random()*100+"vw";
-heart.style.top="100vh";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},5000);
-
-}
-
-setInterval(floatingHeart,500);
-
-document.getElementById("startBtn").onclick=function(){
-
-document.getElementById("welcome").style.display="none";
-document.getElementById("story").style.display="block";
-
-showTexts();
-
-};
-
-const texts=[
-
-"诗雨，对不起，是我让你受委屈了。",
-
-"我不该让你难过，更不该让你一个人生闷气。",
-
-"你的每一次沉默，其实都让我特别心疼。",
-
-"如果能重新来一次，我一定会把你哄得开开心心。"
-
-];
-
-let line=0;
-
-function showTexts(){
-
-if(line<texts.length){
-
-let div=document.getElementById("text");
-
-div.innerHTML=texts[line];
-
-line++;
-
-setTimeout(showTexts,2500);
-
-}else{
-
-document.getElementById("choice").style.display="block";
-
-}
-
-}
-
-function heartExplosion(){
-
-for(let i=0;i<120;i++){
-
-setTimeout(()=>{
-
-const heart=document.createElement("div");
-
-heart.className="heart";
-heart.innerHTML="❤️";
-
-heart.style.left=Math.random()*100+"vw";
-heart.style.top=Math.random()*100+"vh";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},5000);
-
-},i*30);
-
-}
-
-}
-
-function forgive(){
-
-heartExplosion();
-
-document.getElementById("result").innerHTML=
-"谢谢宝宝❤️<br>我以后一定好好爱你";
-
-}
-
-function notForgive(){
-
-document.getElementById("emoji").style.display="block";
-
-document.getElementById("result").innerHTML=
-"这个其实也是原谅按钮😝<br>你已经被爱心包围啦❤️";
-
-heartExplosion();
-
-}
-
 </script>
-
 </body>
 </html>
